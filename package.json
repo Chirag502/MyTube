@@ -1,0 +1,25 @@
+{
+  "name": "mytube",
+  "version": "1.0.0",
+  "description": "Cloning Youtube with Vanilla JS and Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node init.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chirag Mittal",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/node": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.0"
+  },
+  "devDependencies": {
+    "chalk": "^4.0.0",
+    "nodemon": "^2.0.4"
+  }
+}
