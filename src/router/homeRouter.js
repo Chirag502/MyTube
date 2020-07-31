@@ -4,7 +4,7 @@ import {getJoin, getLogin, logout,postJoin,postLogin, githubLogin, fbLogin, post
 import { videoSearch, videoHome } from '../controller/videoController';
 import { onlyPublic, onlyPrivate } from '../middleware';
 import passport from 'passport';
-import { postGithubLogin ,getMe} from './../controller/userController';
+import { postGithubLogin ,getMe} from '../controller/userController';
 
 const homeRouter=express.Router();
 

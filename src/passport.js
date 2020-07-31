@@ -3,6 +3,7 @@ import User from './models/User';
 import routes from "./routes"
 import GithubStrategy from 'passport-github'
 import FacebookStrategy from 'passport-facebook'
+import LinkedInStrategy from 'passport-linkedin-oauth2'
 import { githubLoginCallback,fbLoginCallback } from './controller/userController';
 
 //strategies for login
@@ -12,15 +13,8 @@ passport.use(User.createStrategy());
 passport.use( new GithubStrategy({
         clientID:process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `http://localhost:3000${routes.githubCallback}`
+        callbackURL: `${process.env.PRODUCTION?"https://enigmatic-everglades-08160.herokuapp.com":"http://localhost:3000"}${routes.githubCallback}`
 },githubLoginCallback))
-
-
-passport.use( new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: `http://localhost:3000${routes.fbCallback}`
-  },fbLoginCallback))
 
 
 

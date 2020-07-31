@@ -1,6 +1,6 @@
-import Video from '../models/Video'
-import routes from '../routes'
-import { NoEmitOnErrorsPlugin } from 'webpack'
+import Video from '.././models/Video'
+import routes from '.././routes'
+import Comment from '.././models/Comment';
 
 export const videoSearch=async(req,res)=>{  
     const {query}=req // extracting search from url
@@ -106,7 +106,7 @@ export const videoDetails= async (req,res)=>{
     }=req;
     // console.log(id);
     try{
-    const videodetail= await Video.findById(id).populate("creator");
+    const videodetail= await Video.findById(id).populate("creator").populate("comments");
     console.log(videodetail)
     res.render('videoDetails',{pageTitle:"Video Details",videodetail})
     }
@@ -115,6 +115,50 @@ export const videoDetails= async (req,res)=>{
         console.log(err);
         res.redirect(routes.home);
     }
+}
 
+//Register Video Views
+
+export const postRegisterView=async(req,res)=>{
+    const { 
+        params:{id}
+    }=req;
+    try {
+        const video= await Video.findById(id);
+        console.log(video)
+        video.views+=1;
+        await video.save()
+        res.status(200)
+    } catch (error) {
+        res.status(400);
+    }finally{
+        res.end();
+    }
+}
+
+// registering the Comment
+
+export const postAddComment=async(req,res)=>{
+        const { 
+            params:{id},
+            body:{comment}
+        }=req;
+        try {
+            console.log("comment: ",comment);
+            const video= await Video.findById(id);
+            const newComment= await Comment.create({
+                text:comment,
+                creator:req.user.id,
+                video:id
+            });
+            video.comments.push(newComment._id);
+            await video.save();
+            res.status(200)
+        } catch (error) {
+            console.log(error);
+            res.status(400);
+        }finally{
+            res.end();
+        }
 
 }

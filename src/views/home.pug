@@ -1,0 +1,14 @@
+extends layouts/main
+include mixins/videoBlock
+
+block content
+    .home-videos
+        each v in video
+            //- video comes from videoController
+            +videoBlock({
+                id:v.id, 
+                title:v.title,
+                description:v.description,
+                videoFile:v.fileUrl
+            })
+

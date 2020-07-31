@@ -1,0 +1,40 @@
+extends layouts/main
+include mixins/videoPlayer
+
+block content
+    .video-detail__container
+        +videoPlayer({
+            src:videodetail.fileUrl
+        })
+        .video__info
+            if loggedUser && videodetail.creator.id === loggedUser.id
+                a(href=routes.editVideo(videodetail.id)) 
+                    button Edit video
+            h5.video__title #{videodetail.title}
+            p.video__description #{videodetail.description}
+            if videodetail.views === 1
+                span.video__views 1 view
+            else 
+                span.video__views #{videodetail.views} views
+            .video__author
+                |Uploaded by  
+                if loggedUser && videodetail.creator.id === loggedUser.id
+                    a(href=routes.userDetails(videodetail.creator.id))=videodetail.creator.name
+                else
+                    span=videodetail.creator.name
+        .video__comments
+            if videodetail.comments.length === 1
+                span.video__comment-number
+                    span#jsCommentNumber 1
+                    |  comment
+            else
+                span.video__comment-number
+                    span#jsCommentNumber=videodetail.comments.length
+                    |  comments
+            form.add__comment#jsAddComment
+                input(type="text", placeholder="Add a comment")
+            ul.video__comments-list#jsCommentList
+                each comment in videodetail.comments.reverse()
+                    li
+                        span=comment.text
+
