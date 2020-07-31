@@ -35,9 +35,15 @@ export const logout=(req,res)=>{
   res.redirect(routes.home);
 }
 
-export const getMe=(req,res)=>{
-  console.log(req.user)
-  res.render('userDetails',{pageTitle:"User Details",user : req.user});
+export const getMe=async(req,res)=>{
+  try {
+    const user= await User.findById(req.user.id).populate("videos")
+    console.log( user)
+    res.render('userDetails',{pageTitle:"User Details",user});
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+  
 }
 
 // GITHUB AUTH
@@ -132,19 +138,44 @@ export const postEditProfile=async(req,res)=>{
     res.redirect(routes.me)
 
   } catch (error) {
-    res.render(routes.editProfile,{ pageTitle:"Edit Profile"})
+    res.redirect(routes.editProfile)
     
   }
 
 }
 
-export const changePassword=(req,res)=>res.render('changePassword',{pageTitle:"Change Password"});
+//change password
+
+export const getChangePassword=(req,res)=>res.render('changePassword',{pageTitle:"Change Password"});
+
+export const postChangePassword=async(req,res)=>{
+  const{currentPassword,newPassword,verifyPassword}=req.body;
+  try {
+    
+    if(newPassword!==verifyPassword){
+      res.status(400);
+      res.redirect(routes.changePassword)
+    }
+    else{
+      await req.user.changePassword(currentPassword,newPassword)
+      res.redirect(routes.me);
+    }
+
+  } catch (error) {
+    res.status(400);
+    res.redirect(routes.changePassword);
+  }
+
+}
 
 
 export const userDetails=async(req,res)=> {
-  const{ params:{ id } }=req
+  const{ 
+    params:{ id } 
+  }=req
   try {
-    const user= await User.findById(id)
+    const user= await User.findById(id).populate("videos")
+    // console.log( typeof 1)
     res.render('userDetails',{pageTitle:"User Details",user});
   } catch (error) {
     res.redirect(routes.home);

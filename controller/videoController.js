@@ -1,9 +1,9 @@
 import Video from '../models/Video'
 import routes from '../routes'
+import { NoEmitOnErrorsPlugin } from 'webpack'
 
 export const videoSearch=async(req,res)=>{  
-    const {query}=req
-    // console.log(query)
+    const {query}=req // extracting search from url
     let videos=[]
     videos=await Video.find({title:{$regex:query.term , $options:'i'}});
     console.log(videos)
@@ -22,8 +22,15 @@ export const getEditVideo=async (req,res)=>{
     }=req;
     try{
         const video=await Video.findById(id);
-        console.log(video)
-        res.render('editVideo',{pageTitle:`Edit ${video.title} `,video})
+        console.log( video.creator.toString()===req.user.id);
+        if(video.creator.toString()!==req.user.id)
+        {
+            throw Error();
+            return;
+        }
+        else{
+            res.render('editVideo',{pageTitle:`Edit ${video.title} `,video})
+        }
     }
     catch(err){
 
@@ -51,10 +58,16 @@ export const deleteVideo= async(req,res)=>{
         params:{id}
     }=req;
     try{
-        console.log(id);
-    const videodetail= await Video.findByIdAndDelete(id);
-    console.log(videodetail)
-    res.render('deleteVideo');
+        const video=await Video.findById(id);
+        if(video.creator!==req.user.id)
+        {
+            throw Error();
+            return;
+        }
+        else{
+            await Video.findOneAndDelete(id);
+            res.render('deleteVideo');
+        }
     }
     catch(err)
     {
@@ -73,21 +86,27 @@ export const postUploadVideo= async (req,res)=>{
         file:{path}
     }=req;
     console.log("hello :",path)
-    const video=new Video({
+    const newVideo=new Video({
         fileUrl:path,
         title,
-        description
+        description,
+        creator:req.user.id
     })
-    await video.save();
-    console.log(video);
-    res.redirect(routes.videoDetails(video._id));
+    await newVideo.save();
+
+    // regestering creator of video for => video edit and delete purposes
+    req.user.videos.push(newVideo._id);
+    await req.user.save();
+    console.log(newVideo);
+    res.redirect(routes.videoDetails(newVideo._id));
 }
 export const videoDetails= async (req,res)=>{ 
     const { 
         params:{id}
     }=req;
+    // console.log(id);
     try{
-    const videodetail= await Video.findById(id);
+    const videodetail= await Video.findById(id).populate("creator");
     console.log(videodetail)
     res.render('videoDetails',{pageTitle:"Video Details",videodetail})
     }
