@@ -1,0 +1,12 @@
+//- a mixin is a class containing methods that can be used by other classes without a need to inherit from it. In other words, a mixin provides methods that implement a certain behavior, but we do not use it alone, we use it to add the behavior to other classes 
+mixin videoBlock(video={})
+    .videoBlock
+        a(href=routes.videoDetails(video.id))
+            video.video__thumbnail(src=`/${video.videoFile}`)
+            h4.videoBlock__title=video.title
+            p.video__description #{video.description}
+            if video.views === 1
+                h6.videoBlock__views 1 view
+            else
+                h6.videoBlock__views #{video.views} views
+
