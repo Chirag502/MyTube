@@ -13,7 +13,7 @@ passport.use(User.createStrategy());
 passport.use( new GithubStrategy({
         clientID:process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `${process.env.PRODUCTION?"https://enigmatic-everglades-08160.herokuapp.com":"http://localhost:3000"}${routes.githubCallback}`
+        callbackURL: `${process.env.PRODUCTION?"https://guarded-inlet-24517.herokuapp.com":"http://localhost:3000"}${routes.githubCallback}`
 },githubLoginCallback))
 
 
