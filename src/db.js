@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 dotenv.config()
-console.log(process.env.PRODUCTION ? process.env.MONGO_URL_PROD: process.env.MONGO_URL)
 mongoose.connect(process.env.PRODUCTION ? process.env.MONGO_URL_PROD: process.env.MONGO_URL,{
     useFindAndModify:false,
  useNewUrlParser:true,
@@ -9,3 +8,5 @@ mongoose.connect(process.env.PRODUCTION ? process.env.MONGO_URL_PROD: process.en
 }).then(()=>console.log("✅ connnected to database "))
     .catch(()=>console.log( " 😖 failed to connect to db"));
   
+    export const conn=mongoose.connection;
+    // console.log(conn.client.s);

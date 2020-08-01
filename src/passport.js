@@ -1,6 +1,7 @@
 import passport from 'passport';
 import User from './models/User';
 import routes from "./routes"
+import conn from './db'
 import GithubStrategy from 'passport-github'
 import FacebookStrategy from 'passport-facebook'
 import LinkedInStrategy from 'passport-linkedin-oauth2'

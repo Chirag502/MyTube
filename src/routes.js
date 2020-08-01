@@ -36,6 +36,12 @@ const API='/api'
 const REGISTER_VIEW ="/:id/view"
 const ADD_COMMENT="/:id/comment"
 
+//profile image
+const PROFILE_IMAGE='/image/:filename'
+
+//video
+const SHOW_VIDEO='/fetch/:filename'
+
 
 const routes={
      home:HOME,
@@ -81,6 +87,9 @@ const routes={
      // API's
      api:API,
      registerView:REGISTER_VIEW,
-     addComment:ADD_COMMENT
+     addComment:ADD_COMMENT,
+
+     profileImage:PROFILE_IMAGE,
+     showVideo:SHOW_VIDEO
 }
 export default routes;

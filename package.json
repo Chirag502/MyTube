@@ -10,7 +10,7 @@
     "build:server1": "babel src --out-dir build --ignore 'src/static','src/assets','src/webpack.config.js' ",
     "copyAll1": "xcopy src\\views build\\views\\ /s && xcopy src\\static\\styles.css build\\static /i",
     "build1": "npm run build:server1 && npm run build:assets1 && npm run copyAll1",
-    "start1": "SET PRODUCTION=true && node build/init.js",
+    "start1": "SET PRODUCTION=true && nodemon build/init.js",
     "prestart1": "npm run build1",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:assets": "cd src && WEBPACK_ENV=production webpack",

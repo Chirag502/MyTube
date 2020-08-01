@@ -38,7 +38,7 @@ export const logout=(req,res)=>{
 export const getMe=async(req,res)=>{
   try {
     const user= await User.findById(req.user.id).populate("videos")
-    console.log( user)
+
     res.render('userDetails',{pageTitle:"User Details",user});
   } catch (error) {
     res.redirect(routes.home);
@@ -133,7 +133,7 @@ export const postEditProfile=async(req,res)=>{
     await User.findByIdAndUpdate(req.user.id,{
       name,
       email,
-      avatarUrl: file ? file.path : req.user.avatarUrl
+      avatarUrl: file ? `https://guarded-inlet-24517.herokuapp.com/users/image/${file.filename}` : req.user.avatarUrl
     })
     res.redirect(routes.me)
 
