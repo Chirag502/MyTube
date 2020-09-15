@@ -7,7 +7,7 @@ block content
             if user.avatarUrl
                 img.u-avatar(src=user.avatarUrl)
             else
-                i.user-icon.fas.fa-user.fa-5x
+                i.user-icon.fas.fa-user-circle.fa-5x
             h4.profile__username=user.name
         if loggedUser.id === user.id
         .user-profile__btns
