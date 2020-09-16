@@ -1,28 +1,33 @@
-import passport from 'passport';
-import User from './models/User';
-import routes from "./routes"
-import conn from './db'
-import GithubStrategy from 'passport-github'
-import FacebookStrategy from 'passport-facebook'
-import LinkedInStrategy from 'passport-linkedin-oauth2'
-import { githubLoginCallback,fbLoginCallback } from './controller/userController';
+import passport from "passport";
+import User from "./models/User";
+import routes from "./routes";
+import conn from "./db";
+import GithubStrategy from "passport-github";
+import FacebookStrategy from "passport-facebook";
+import LinkedInStrategy from "passport-linkedin-oauth2";
+import {
+  githubLoginCallback,
+  fbLoginCallback,
+} from "./controller/userController";
 
 //strategies for login
 
 passport.use(User.createStrategy());
 
-passport.use( new GithubStrategy({
-        clientID:process.env.GITHUB_CLIENT_ID,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `${process.env.PRODUCTION?"https://guarded-inlet-24517.herokuapp.com":"http://localhost:3000"}${routes.githubCallback}`
-},githubLoginCallback))
-
-
-
-
-
-
-
+passport.use(
+  new GithubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: `${
+        process.env.PRODUCTION
+          ? "https://guarded-inlet-24517.herokuapp.com"
+          : "http://localhost:3000"
+      }${routes.githubCallback}`,
+    },
+    githubLoginCallback
+  )
+);
 
 // Sessions
 
@@ -30,19 +35,16 @@ passport.use( new GithubStrategy({
 
 //     Each subsequent request will not contain credentials, but rather the unique cookie that identifies the session. In order to support login sessions, Passport will serialize and deserialize user instances to and from the session.
 
-
 //     Only the user ID is serialized to the session, keeping the amount of data stored within the session small. When subsequent requests are received, this ID is used to find the user, which will be restored to req.user.
 
 //     The serialization and deserialization logic is supplied by the application, allowing the application to choose an appropriate database and/or object mapper, without imposition by the authentication layer.
 
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
 
-
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
   });
-  
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-      done(err, user);
-    });
-  });
+});

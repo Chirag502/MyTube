@@ -5,7 +5,7 @@ const videoPreview = document.getElementById("jsVideoPreview");
 let streamObject;
 let videoRecorder;
 
-const handleVideoData = event => {
+const handleVideoData = (event) => {
   const { data: videoFile } = event;
   const link = document.createElement("a");
   link.href = URL.createObjectURL(videoFile);
@@ -32,7 +32,7 @@ const getVideo = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: { width: 1280, height: 720 }
+      video: { width: 1280, height: 720 },
     });
     videoPreview.srcObject = stream;
     videoPreview.muted = true;

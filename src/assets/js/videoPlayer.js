@@ -13,7 +13,7 @@ const volumeRange = document.getElementById("jsVolume");
 const registerView = () => {
   const videoId = window.location.href.split("/videos/")[1];
   fetch(`/api/${videoId}/view`, {
-    method: "POST"
+    method: "POST",
   });
 };
 
@@ -40,6 +40,7 @@ function handleVolumeClick() {
 }
 
 function exitFullScreen() {
+  videoPlayer.style.maxWidth = "850px";
   fullScrnBtn.innerHTML = '<i class="fas fa-expand"></i>';
   fullScrnBtn.addEventListener("click", goFullScreen);
   if (document.exitFullscreen) {
@@ -64,23 +65,24 @@ function goFullScreen() {
     videoContainer.msRequestFullscreen();
   }
   fullScrnBtn.innerHTML = '<i class="fas fa-compress"></i>';
+  videoPlayer.style.maxWidth = "100%";
   fullScrnBtn.removeEventListener("click", goFullScreen);
   fullScrnBtn.addEventListener("click", exitFullScreen);
 }
 
-const formatDate = seconds => {
+const formatDate = (seconds) => {
   const secondsNumber = parseInt(seconds, 10);
   let hours = Math.floor(secondsNumber / 3600);
   let minutes = Math.floor((secondsNumber - hours * 3600) / 60);
   let totalSeconds = secondsNumber - hours * 3600 - minutes * 60;
-
+  // console.log(totalSeconds);
   if (hours < 10) {
     hours = `0${hours}`;
   }
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
-  if (seconds < 10) {
+  if (totalSeconds < 10) {
     totalSeconds = `0${totalSeconds}`;
   }
   return `${hours}:${minutes}:${totalSeconds}`;
@@ -93,7 +95,10 @@ function getCurrentTime() {
 async function setTotalTime() {
   let duration;
   if (!isFinite(videoPlayer.duration)) {
-    const blob = await fetch(videoPlayer.src).then(response => response.blob());
+    console.log("no duration for video");
+    const blob = await fetch(videoPlayer.src).then((response) =>
+      response.blob()
+    );
     duration = await getBlobDuration(blob);
   } else {
     duration = videoPlayer.duration;
@@ -107,11 +112,16 @@ function handleEnded() {
   registerView();
   videoPlayer.currentTime = 0;
   playBtn.innerHTML = '<i class="fas fa-play"></i>';
+
+  // if in full screen , comes back to normal screen
+  if (window.innerHeight == screen.height) {
+    exitFullScreen();
+  }
 }
 
 function handleDrag(event) {
   const {
-    target: { value }
+    target: { value },
   } = event;
   videoPlayer.volume = value;
   if (value >= 0.6) {
@@ -125,6 +135,7 @@ function handleDrag(event) {
 
 function init() {
   videoPlayer.volume = 0.5;
+  // videoPlayer.currentTime = 120;
   playBtn.addEventListener("click", handlePlayClick);
   volumeBtn.addEventListener("click", handleVolumeClick);
   fullScrnBtn.addEventListener("click", goFullScreen);

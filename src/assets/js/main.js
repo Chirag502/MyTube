@@ -1,5 +1,4 @@
-import "../scss/styles.scss"
+import "../scss/styles.scss";
 import "./videoPlayer";
 import "./videoRecorder";
 import "./addComment";
-
