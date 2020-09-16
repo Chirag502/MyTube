@@ -2,7 +2,7 @@
 mixin videoBlock(video={})
     .videoBlock
         a(href=routes.videoDetails(video.id))
-            video.video__thumbnail(src=`/${video.videoFile}`)
+            video.video__thumbnail(src=video.videoFile)
             h4.videoBlock__title=video.title
             //- p.video__description #{video.description}
             if video.views === 1

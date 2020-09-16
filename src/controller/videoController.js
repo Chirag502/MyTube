@@ -25,7 +25,6 @@ export const getEditVideo = async (req, res) => {
     // console.log( video.creator.toString()===req.user.id);
     if (video.creator.toString() !== req.user.id) {
       throw Error();
-      return;
     } else {
       res.render("editVideo", { pageTitle: `Edit ${video.title} `, video });
     }
@@ -51,6 +50,7 @@ export const postEditVideo = async (req, res) => {
     res.redirect(routes.home);
   }
 };
+
 export const deleteVideo = async (req, res) => {
   const {
     params: { id },
@@ -58,8 +58,8 @@ export const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(id);
     if (video.creator.toString() !== req.user.id) {
+      console.log("error since user is not creater of this video");
       throw Error();
-      return;
     } else {
       await Video.findOneAndDelete(id);
     }
@@ -68,6 +68,7 @@ export const deleteVideo = async (req, res) => {
   }
   res.redirect(routes.home);
 };
+
 export const getUploadVideo = (req, res) => {
   res.render("uploadVideo", { pageTitle: "Upload" });
 };
@@ -75,11 +76,10 @@ export const getUploadVideo = (req, res) => {
 export const postUploadVideo = async (req, res) => {
   const {
     body: { title, description },
-    file: { path },
+    file: { location },
   } = req;
-  // console.log("hello :",path)
   const newVideo = new Video({
-    fileUrl: path,
+    fileUrl: location,
     title,
     description,
     creator: req.user.id,
@@ -89,7 +89,7 @@ export const postUploadVideo = async (req, res) => {
   // regestering creator of video for => video edit and delete purposes
   req.user.videos.push(newVideo._id);
   await req.user.save();
-  // console.log(newVideo);
+  console.log(newVideo);
   res.redirect(routes.videoDetails(newVideo._id));
 };
 export const videoDetails = async (req, res) => {
@@ -101,7 +101,7 @@ export const videoDetails = async (req, res) => {
     const videodetail = await Video.findById(id)
       .populate("creator")
       .populate("comments");
-    // console.log(videodetail)
+    console.log(videodetail);
     res.render("videoDetails", { pageTitle: "Video Details", videodetail });
   } catch (err) {
     console.log(err);
@@ -117,6 +117,7 @@ export const postRegisterView = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
+    // console.log(video)
     video.views += 1;
     await video.save();
     res.status(200);

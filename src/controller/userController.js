@@ -129,12 +129,13 @@ export const postEditProfile = async (req, res) => {
     body: { name, email },
     file,
   } = req;
+  // console.log(req.file);
   try {
     await User.findByIdAndUpdate(req.user.id, {
       name,
       email,
       avatarUrl: file
-        ? `https://guarded-inlet-24517.herokuapp.com/users/image/${file.filename}`
+        ? file.location
         : req.user.avatarUrl,
     });
     res.redirect(routes.me);

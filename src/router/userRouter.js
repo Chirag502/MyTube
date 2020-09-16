@@ -27,6 +27,6 @@ userRouter.post(
 userRouter.get(routes.changePassword, onlyPrivate, getChangePassword);
 userRouter.post(routes.changePassword, onlyPrivate, postChangePassword);
 
-userRouter.get(routes.userDetails(), userDetails);
-userRouter.get(routes.profileImage, profileImage);
+userRouter.get(routes.userDetails(),userDetails)
+// userRouter.get(routes.profileImage,profileImage)
 export default userRouter;
