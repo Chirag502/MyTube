@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import morgan from "morgan"; //middleware
 import passport from "passport"; //middleware
 import routes from "./routes";
+import flash from "express-flash";
 import home from "./router/homeRouter";
 import userRouter from "./router/userRouter";
 import videoRouter from "./router/videoRouter";
@@ -39,6 +40,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 app.use(localsMiddleware);
 
 //  ROUTES

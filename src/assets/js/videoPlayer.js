@@ -103,7 +103,9 @@ async function setTotalTime() {
   } else {
     duration = videoPlayer.duration;
   }
+  console.log(duration);
   const totalTimeString = formatDate(duration);
+  console.log(totalTimeString);
   totalTime.innerHTML = totalTimeString;
   setInterval(getCurrentTime, 1000);
 }

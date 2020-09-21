@@ -6,7 +6,6 @@ export const videoSearch = async (req, res) => {
   const { query } = req; // extracting search from url
   let videos = [];
   videos = await Video.find({ title: { $regex: query.term, $options: "i" } });
-  // console.log(videos)
   res.render("search", { pageTitle: "Search", videos, searchingBy: query });
 };
 export const videoHome = async (req, res) => {
@@ -22,7 +21,6 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    // console.log( video.creator.toString()===req.user.id);
     if (video.creator.toString() !== req.user.id) {
       throw Error();
     } else {
@@ -44,7 +42,6 @@ export const postEditVideo = async (req, res) => {
       },
       { new: true }
     );
-    // console.log(video);
     res.redirect(routes.videoDetails(video._id));
   } catch (err) {
     res.redirect(routes.home);
@@ -73,38 +70,47 @@ export const getUploadVideo = (req, res) => {
   res.render("uploadVideo", { pageTitle: "Upload" });
 };
 
+
+
 export const postUploadVideo = async (req, res) => {
   const {
     body: { title, description },
     file: { location },
   } = req;
-  const newVideo = new Video({
-    fileUrl: location,
-    title,
-    description,
-    creator: req.user.id,
-  });
-  await newVideo.save();
+  try{
+    const newVideo = new Video({
+      fileUrl: location,
+      title,
+      description,
+      creator: req.user.id,
+    });
+    await newVideo.save();
+  
+    // regestering creator of video for => video edit and delete purposes
+    req.user.videos.push(newVideo._id);
+    await req.user.save();
+    req.flash("success", "Video Uploaded");
+    res.redirect(routes.videoDetails(newVideo._id));
+  }
 
-  // regestering creator of video for => video edit and delete purposes
-  req.user.videos.push(newVideo._id);
-  await req.user.save();
-  console.log(newVideo);
-  res.redirect(routes.videoDetails(newVideo._id));
+  catch (error) {
+    req.flash("error", "Cant Upload Video");
+    res.render("uploadVideo", { pageTitle: "Upload" });
+  }
 };
+
+
 export const videoDetails = async (req, res) => {
   const {
     params: { id },
   } = req;
-  // console.log(id);
   try {
     const videodetail = await Video.findById(id)
       .populate("creator")
       .populate("comments");
-    console.log(videodetail);
     res.render("videoDetails", { pageTitle: "Video Details", videodetail });
   } catch (err) {
-    console.log(err);
+    req.flash("error", "Video Not Found")
     res.redirect(routes.home);
   }
 };
@@ -117,7 +123,6 @@ export const postRegisterView = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    // console.log(video)
     video.views += 1;
     await video.save();
     res.status(200);
@@ -136,7 +141,6 @@ export const postAddComment = async (req, res) => {
     body: { comment },
   } = req;
   try {
-    // console.log("comment: ",comment);
     const video = await Video.findById(id);
     const newComment = await Comment.create({
       text: comment,

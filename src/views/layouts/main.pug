@@ -1,12 +1,27 @@
-<!DOCTYPE html>
+include ../mixins/flash
+
+doctype html
 html(lang="en")
     head
         script(src="https://kit.fontawesome.com/a076d05399.js")
-        //- meta(charset="UTF-8")
-        //- meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet", href="/static/styles.css")
         title #{pageTitle} | #{siteName}
     body
+        if messages.error
+            +flash({
+                type:'error',
+                text:messages.error
+            })
+        if messages.info
+            +flash({
+                type:'info',
+                text:messages.info
+                })
+        if messages.success
+            +flash({
+                type:'success',
+                text:messages.success
+            })
         include ../partials/header
         main
             block content

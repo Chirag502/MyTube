@@ -6,9 +6,9 @@
   "scripts": {
     "dev:server": "nodemon --exec babel-node src/init.js",
     "dev:assets": "cd src && SET WEBPACK_ENV=development  && webpack -w",
-    "build:assets1": " SET WEBPACK_ENV=production && cd src && webpack",
+    "build:assets1": " SET WEBPACK_ENV=production && cd src && webpack -w",
     "build:server1": "babel src --out-dir build --ignore 'src/static','src/assets','src/webpack.config.js' ",
-    "copyAll1": "xcopy src\\views build\\views\\ /s && xcopy src\\static\\styles.css build\\static /i",
+    "copyAll1": "xcopy src\\views build\\views\\ /Y && xcopy src\\static\\styles.css build\\static /Y",
     "build1": "npm run build:server1 && npm run build:assets1 && npm run copyAll1",
     "start1": "SET PRODUCTION=true && nodemon build/init.js",
     "prestart1": "npm run build1",
