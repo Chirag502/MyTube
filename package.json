@@ -1,12 +1,12 @@
 {
   "name": "mytube",
   "version": "1.0.0",
-  "description": "Cloning Youtube with Vanilla JS and Nodejs",
+  "description": "A Video Streaming WebApp with Vanilla JS and Nodejs",
   "main": "index.js",
   "scripts": {
     "dev:server": "nodemon --exec babel-node src/init.js",
-    "dev:assets": "cd src && SET WEBPACK_ENV=development  && webpack -w",
-    "build:assets1": " SET WEBPACK_ENV=production && cd src && webpack",
+    "dev:assets": "cd src && WEBPACK_ENV=development  && webpack -w",
+    "build:assets1": "WEBPACK_ENV=production && cd src && webpack",
     "build:server1": "babel src --out-dir build --ignore 'src/static','src/assets','src/webpack.config.js' ",
     "copyAll1": "xcopy src\\views build\\views\\ /Y && xcopy src\\static\\styles.css build\\static /Y",
     "build1": "npm run build:server1 && npm run build:assets1 && npm run copyAll1",
